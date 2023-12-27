@@ -17,8 +17,6 @@ msg() {
     echo ""
 }
 
-sudo swapoff -a
-
 # Remove
 sudo rm -r /etc/cni/net.d
 
