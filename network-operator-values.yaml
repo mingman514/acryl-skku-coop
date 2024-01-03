@@ -1,0 +1,36 @@
+nfd:
+  enabled: true
+
+# NicClusterPolicy CR values:
+deployCR: true
+ofedDriver:
+  deploy: false
+
+rdmaSharedDevicePlugin:
+  deploy: true
+  resources:
+    - name: rdma_shared_device_a
+      drivers: ["mlx5_core"]
+
+nvPeerDriver:
+  deploy: false
+
+secondaryNetwork:
+  deploy: true
+  cniPlugins:
+    deploy: true
+  multus:
+    deploy: true
+  ipamPlugin:
+    deploy: true
+
+# to remove node affinity in multus ds
+nodeAffinity:
+  preferredDuringSchedulingIgnoredDuringExecution:
+  - weight: 1
+    preference:
+      matchExpressions:
+      - key: node-role.kubernetes.io/master
+        operator: DoesNotExist
+      - key: node-role.kubernetes.io/control-plane
+        operator: DoesNotExist

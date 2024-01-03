@@ -60,3 +60,10 @@ sudo systemctl enable docker kubelet
 # 자동완성 설정 (exec bash로 배시 리로드, source /etc/profile.d/bash_completion.sh로 자동완성 리로드)
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 source /etc/profile.d/bash_completion.sh
+
+
+##############################
+# Helm 설치
+##############################
+# install Helm
+sudo snap install helm --classic
