@@ -47,13 +47,15 @@ sudo systemctl restart containerd
 sudo apt-get update
 sudo apt-get install -y apt-transport-https ca-certificates curl gpg
 
-# k8s 공식 repo 추가 (v1.29 부분만 변경하여 다른 버전 key 적용 가능)
+# k8s 공식 repo 추가
 sudo mkdir -m 755 /etc/apt/keyrings
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.27/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.27/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
-# k8s 관련 패키지 설치
+
+# k8s 관련 패키지 설치 (설치 가능한 패키지 확인: apt-cache madison [package name])
 sudo apt-get update
-sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-get install -y kubelet=1.27.10-1.1 kubeadm=1.27.10-1.1 kubectl=1.27.10-1.1
 
 # 버전 고정
 sudo apt-mark hold kubelet kubeadm kubectl
@@ -64,6 +66,7 @@ sudo systemctl enable docker kubelet
 # 자동완성 설정 (exec bash로 배시 리로드, source /etc/profile.d/bash_completion.sh로 자동완성 리로드)
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 source /etc/profile.d/bash_completion.sh
+
 
 
 ##############################
