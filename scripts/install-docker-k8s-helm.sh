@@ -44,12 +44,16 @@ sudo systemctl restart containerd
 ##############################
 # K8S 설치
 ##############################
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl gpg
+
+# k8s 공식 repo 추가 (v1.29 부분만 변경하여 다른 버전 key 적용 가능)
+sudo mkdir -m 755 /etc/apt/keyrings
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 # k8s 관련 패키지 설치
 sudo apt-get update
-sudo apt-get install -y kubelet=1.27.4-00 kubeadm=1.27.4-00 kubectl=1.27.4-00
+sudo apt-get install -y kubelet kubeadm kubectl
 
 # 버전 고정
 sudo apt-mark hold kubelet kubeadm kubectl
