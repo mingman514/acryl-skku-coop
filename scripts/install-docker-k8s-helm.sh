@@ -36,9 +36,33 @@ containerd config default | sudo tee /etc/containerd/config.toml
 # SystemdCgroup = true 설정
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
 
+
+
+# Nvidia Device Plugin 설정
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/libnvidia-container/gpgkey | sudo apt-key add -
+curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | sudo tee /etc/apt/sources.list.d/libnvidia-container.list
+
+sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+
+echo '{
+    "default-runtime": "nvidia",
+            "runtimes": {
+	                    "nvidia": {
+			                                "path": "/usr/bin/nvidia-container-runtime",
+							                                        "runtimeArgs": []
+												                                                }
+																	                                            }
+                            }' | sudo tee /etc/docker/daemon.json
+
+sudo systemctl restart docker
+
+sudo sed -i 's/default_runtime_name = "runc"/default_runtime_name = "nvidia"/' /etc/containerd/config.toml
+sudo sed -i 's/runtimes.runc/runtimes.nvidia/' /etc/containerd/config.toml
+sudo sed -i 's@BinaryName = ""@BinaryName = "/usr/bin/nvidia-container-runtime"@' /etc/containerd/config.toml
+
 sudo systemctl enable containerd
 sudo systemctl restart containerd
-
 
 
 ##############################
@@ -51,7 +75,6 @@ sudo apt-get install -y apt-transport-https ca-certificates curl gpg
 sudo mkdir -m 755 /etc/apt/keyrings
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.27/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.27/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-
 
 # k8s 관련 패키지 설치 (설치 가능한 패키지 확인: apt-cache madison [package name])
 sudo apt-get update
@@ -68,9 +91,12 @@ kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 source /etc/profile.d/bash_completion.sh
 
 
-
 ##############################
 # Helm 설치
 ##############################
 # install Helm
-sudo snap install helm --classic
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+sudo apt-get install apt-transport-https --yes
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm

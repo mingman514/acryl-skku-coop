@@ -4,16 +4,16 @@ curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-
 
 sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
 
-echo '{
-    "default-runtime": "nvidia",
-        "runtimes": {
-	        "nvidia": {
-		            "path": "/usr/bin/nvidia-container-runtime",
-			                "runtimeArgs": []
-					        }
-					    }
-			    }' | sudo tee /etc/docker/daemon.json
+echo '{  
+   "runtimes": {  
+          "nvidia": {  
+	             "args": [],  
+		                "path": "nvidia-container-runtime"  
+				       }  
+			          }
+		     }' | sudo tee /etc/docker/daemon.json
 
+sudo systemctl daemon-reload
 sudo systemctl restart docker
 
 sudo sed -i 's/default_runtime_name = "runc"/default_runtime_name = "nvidia"/' /etc/containerd/config.toml

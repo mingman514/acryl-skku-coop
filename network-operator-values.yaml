@@ -1,6 +1,15 @@
 nfd:
   enabled: true
 
+  #sriovNetworkOperator:
+  #  enabled: true
+  #  # pfNames, linkTypes, isRdma
+  #  resources:
+  #    - name: sriov_rdma
+  #      pfNames: ens11f1
+  #      isRdma: true
+
+
 # NicClusterPolicy CR values:
 deployCR: true
 ofedDriver:
@@ -11,9 +20,7 @@ rdmaSharedDevicePlugin:
   resources:
     - name: rdma_shared_device_a
       drivers: ["mlx5_core"]
-
-nvPeerDriver:
-  deploy: false
+      #ifNames: ["ens11f0", "ens11f1"]
 
 secondaryNetwork:
   deploy: true

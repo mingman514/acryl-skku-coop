@@ -1,4 +1,5 @@
 # Initial Settings (run once)
+sudo swapoff -a
 
 cd ./scripts
 sudo apt install -y jq ipcalc
