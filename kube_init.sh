@@ -50,7 +50,6 @@ sudo systemctl restart kubelet
 msg "Init kubernetes cluster"
 sleep 2
 sudo kubeadm init \
-	--kubernetes-version 1.27.10 \
 	--cri-socket unix://var/run/containerd/containerd.sock
 	#--pod-network-cidr=20.0.1.0/24 \
 
@@ -68,6 +67,8 @@ kubectl taint nodes $(hostname) node-role.kubernetes.io/control-plane-
 msg "Create CNI"
 sleep 2
 kubectl apply -f https://docs.projectcalico.org/v3.23/manifests/calico.yaml
+# There are chances that calico autodetects a wrong interface, so use the first internal ip for each kubernetes node.
+kubectl set env daemonset/calico-node -n kube-system IP_AUTODETECTION_METHOD=kubernetes-internal-ip
 
 echo "** Wait until CNI Pod Running"
 wait_until_pod_running_by_label "k8s-app=calico-kube-controllers"
