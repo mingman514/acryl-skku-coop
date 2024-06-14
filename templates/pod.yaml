@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mp-rdma-101
+  annotations:
+    k8s.v1.cni.cncf.io/networks: nad-101
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: acridc-101
+  containers:
+  - image: ubuntu:20.04 
+          #  - image: nginx:1.24
+    name: rdma-test-ctr
+    securityContext:
+      capabilities:
+        add: [ "IPC_LOCK" ]
+    resources:
+      limits:
+        rdma/jf_roce: 1
+        nvidia.com/gpu: 1
+      requests:
+        rdma/jf_roce: 1
+        nvidia.com/gpu: 1
+    securityContext:                                                                                   
+      privileged: true
+    command: ["/bin/sh", "-c"]
+    args: ["apt update && apt install -y python3 sudo vim openssh-client net-tools iputils-ping iproute2 traceroute; ip route add 10.0.0.0/16 via 10.0.101.1; cp -r /multi-path-rdma /root/; sleep infinity"]
+    #args: ["apt update && apt install -y python3 vim wget openssh-server openssh-client net-tools iputils-ping pciutils iproute2 perftest ibverbs-utils infiniband-diags traceroute; ip route add 10.0.0.0/16 via 10.0.101.1; sleep infinity"]

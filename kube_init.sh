@@ -1,10 +1,3 @@
-TARGET_DIR=~
-TARGET_IP=192.168.1.1   # RNIC IP
-
-RNIC_INTERFACE=$(ip -o addr show | awk "/inet $TARGET_IP/" | awk '{print $2}')
-echo "RNIC interface is [$RNIC_INTERFACE]"
-sleep 3
-
 msg() {
     message="$1"
     border="========================================"
@@ -76,27 +69,14 @@ wait_until_pod_running_by_label "k8s-app=calico-kube-controllers"
 # Nvidia device plugin
 msg "Create nvidia device plugin"
 sleep 2
-./scripts/install-nvidia-device-plugin.sh
+./scripts/install-nvidia-gpu-operator.sh
 
 # Nvidia Network Operator (including rdmaSharedDevicePlugin, multus, etc.)
 msg "Create nvidia network operator"
+sleep 2
 ./scripts/install-nvidia-network-operator.sh
 
-## macvlan
-#msg "Setting macvlan network"
-#sudo apt install -y jq ipcalc
-#cp templates/macvlan_network_template.yaml macvlan_network.yaml
-#RDMA_IFACE=$RNIC_INTERFACE
-#RDMA_SUBNET_CIDR=$(ipcalc -b ${TARGET_IP%:*} | grep Network | awk '{print $2}')
-#RDMA_SUBNET_NETMASK=$(ipcalc -b ${TARGET_IP%:*} | grep Netmask | awk '{print $4}')
-#RDMA_EXCLUDES=${RDMA_SUBNET_CIDR/%$RDMA_SUBNET_NETMASK/25}
-#sed -i -e "s|RDMA_INTERFACE|$RDMA_IFACE|" -e "s|RDMA_SUBNET_CIDR|$RDMA_SUBNET_CIDR|" -e "s|RDMA_SUBNET_EXCLUDES|$RDMA_EXCLUDES|" macvlan_network.yaml
-#jq ".master = $RNIC_INTERFACE" macvlan.conf > tmp_macvlan.conf
-#mv tmp_macvlan.conf macvlan.conf
-#kubectl apply -f macvlan_network.yaml
-
 msg "Init K8S Cluster Done"
-
 echo "Now let Worker nodes join this cluster with following command:"
 echo ""
-sudo kubeadm token create --print-join-command
+kubeadm token create --print-join-command

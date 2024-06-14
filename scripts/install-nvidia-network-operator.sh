@@ -1,8 +1,8 @@
-# add nvidia Helm charts repo
-helm repo add nvidia https://mellanox.github.io/network-operator
+# add mellanox Helm charts repo
+helm repo add mellanox https://mellanox.github.io/network-operator
 helm repo update
 
-# install NVidia Network Operator
+# install Nvidia Network Operator
 helm install -n network-operator --create-namespace \
 	  -f network-operator-values.yaml --wait --version 1.4.0 \
-	    network-operator nvidia/network-operator
+	    network-operator mellanox/network-operator

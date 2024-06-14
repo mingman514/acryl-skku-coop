@@ -1,0 +1,17 @@
+apiVersion: mellanox.com/v1alpha1
+kind: MacvlanNetwork
+metadata:
+  name: nad-204
+spec:
+  networkNamespace: default
+  master: "ens2np0"
+  mode: "bridge"
+  mtu: 1500
+  ipam: |
+    {
+     "type": "whereabouts",
+     "range": "10.0.204.0/24",
+     "range_start": "10.0.204.3",
+     "range_end": "10.0.204.254",
+     "gateway": "10.0.204.1"
+    }
