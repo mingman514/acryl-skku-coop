@@ -4,9 +4,9 @@ metadata:
   name: nad-204
 spec:
   networkNamespace: default
-  master: "ens2np0"
+  master: "ens2.204"
   mode: "bridge"
-  mtu: 1500
+  mtu: 4200
   ipam: |
     {
      "type": "whereabouts",
