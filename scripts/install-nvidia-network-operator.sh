@@ -1,5 +1,5 @@
 # add mellanox Helm charts repo
-helm repo add mellanox https://mellanox.github.io/network-operator
+helm repo add mellanox https://mellanox.github.io/network-operator --force-update
 helm repo update
 
 # install Nvidia Network Operator
