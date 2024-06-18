@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod-3
+  annotations:
+    k8s.v1.cni.cncf.io/networks: vlan3
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: acridc-104
+  containers:
+  #- image: mellanox/rping-test
+  - image: nginx:1.24.0
+    name: rdma-test-ctr
+    securityContext:
+      capabilities:
+        add: [ "IPC_LOCK" ]
+    resources:
+      limits:
+        rdma/rdma_shared_device_a: 1
+      requests:
+        rdma/rdma_shared_device_a: 1
+    securityContext:                                                                                   
+      privileged: true
+    command: ["/bin/sh", "-c"]
+    args: ["apt update && apt install -y net-tools iputils-ping pciutils iproute2 perftest traceroute; sleep infinity"]

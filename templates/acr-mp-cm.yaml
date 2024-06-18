@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jf-mp-config
+  namespace: default
+data:
+  jfb_mp_seed_num: "3" #JFB_MP_SEED_NUM: "3"
+  nccl_ib_qps_per_connection: "3" #NCCL_IB_QPS_PER_CONNECTION: "3"
+  nccl_ib_split_data_on_qps: "1" #NCCL_IB_SPLIT_DATA_ON_QPS: "1"
+
+  # Append node seed here...
+  #JFB_MP_SEED_LIST: "10001,10000,10003"
+  seed_acridc-102: "10000,10001,10003"
+  seed_acridc-202: "10000,10001,10003"

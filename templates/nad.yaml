@@ -1,0 +1,175 @@
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: nad-101
+  namespace: default
+spec:
+  config: '
+  {
+   "cniVersion": "0.3.0",
+   "type": "macvlan",
+   "master": "ens11.101",
+   "mode": "bridge",                                           
+   "ipam": {
+           "type": "whereabouts",
+           "range": "10.0.101.0/24",
+           "range_start": "10.0.101.3",
+           "range_end": "10.0.101.254",
+           "gateway": "10.0.101.1"
+           }
+  }
+  '
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: nad-102
+  namespace: default
+spec:
+  config: '
+  {
+   "cniVersion": "0.3.0",
+   "type": "macvlan",
+   "master": "ens11.102",
+   "mode": "bridge",                                           
+   "ipam": {
+           "type": "whereabouts",
+           "range": "10.0.102.0/24",
+           "range_start": "10.0.102.3",
+           "range_end": "10.0.102.254",
+           "gateway": "10.0.102.1"
+           }
+  }
+  '
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: nad-103
+  namespace: default
+spec:
+  config: '
+  {
+   "cniVersion": "0.3.0",
+   "type": "macvlan",
+   "master": "ens11.103",
+   "mode": "bridge",                                           
+   "ipam": {
+           "type": "whereabouts",
+           "range": "10.0.103.0/24",
+           "range_start": "10.0.103.3",
+           "range_end": "10.0.103.254",
+           "gateway": "10.0.103.1"
+           }
+  }
+  '
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: nad-104
+  namespace: default
+spec:
+  config: '
+  {
+   "cniVersion": "0.3.0",
+   "type": "macvlan",
+   "master": "ens11.104",
+   "mode": "bridge",                                           
+   "ipam": {
+           "type": "whereabouts",
+           "range": "10.0.104.0/24",
+           "range_start": "10.0.104.3",
+           "range_end": "10.0.104.254",
+           "gateway": "10.0.104.1"
+           }
+  }
+  '
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: nad-201
+  namespace: default
+spec:
+  config: '
+  {
+   "cniVersion": "0.3.0",
+   "type": "macvlan",
+   "master": "ens2.201",
+   "mode": "bridge",                                           
+   "ipam": {
+           "type": "whereabouts",
+           "range": "10.0.201.0/24",
+           "range_start": "10.0.201.3",
+           "range_end": "10.0.201.254",
+           "gateway": "10.0.201.1"
+           }
+  }
+  '
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: nad-202
+  namespace: default
+spec:
+  config: '
+  {
+   "cniVersion": "0.3.0",
+   "type": "macvlan",
+   "master": "ens11.202",
+   "mode": "bridge",                                           
+   "ipam": {
+           "type": "whereabouts",
+           "range": "10.0.202.0/24",
+           "range_start": "10.0.202.3",
+           "range_end": "10.0.202.254",
+           "gateway": "10.0.202.1"
+           }
+  }
+  '
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: nad-203
+  namespace: default
+spec:
+  config: '
+  {
+   "cniVersion": "0.3.0",
+   "type": "macvlan",
+   "master": "ens2.203",
+   "mode": "bridge",                                           
+   "ipam": {
+           "type": "whereabouts",
+           "range": "10.0.203.0/24",
+           "range_start": "10.0.203.3",
+           "range_end": "10.0.203.254",
+           "gateway": "10.0.203.1"
+           }
+  }
+  '
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: nad-204
+  namespace: default
+spec:
+  config: '
+  {
+   "cniVersion": "0.3.0",
+   "type": "macvlan",
+   "master": "ens2.204",
+   "mode": "bridge",                                           
+   "ipam": {
+           "type": "whereabouts",
+           "range": "10.0.204.0/24",
+           "range_start": "10.0.204.3",
+           "range_end": "10.0.204.254",
+           "gateway": "10.0.204.1"
+           }
+  }
+  '

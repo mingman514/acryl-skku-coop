@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: acr-accel-ds
+  labels:
+    app: acr-accel
+spec:
+  selector:
+    matchLabels:
+      app: acr-accel
+  template:
+    metadata:
+      labels:
+        app: acr-accel
+    spec:
+      containers:
+      - name: acr-accel-ctr
+        image: 192.168.0.36:5000/mp-ds-default:0.1.0
+        command: ["/bin/sh", "-c"]
+        args: ["cp -r /jf-llm/* /root/; sleep infinity"]
+        env:
+        - name: JFB_MP_SEED_NUM
+          valueFrom:
+            configMapKeyRef:
+              name: jf-mp-config
+              key: jfb_mp_seed_num
+        volumeMounts:
+        - mountPath: /jf-llm
+          name: jf-llm-src
+        - mountPath: /dev/shm
+          name: shm
+      volumes:
+      - name: jf-llm-src
+        persistentVolumeClaim:
+          claimName: jf-llm-src-pvc
+      - name: shm
+        hostPath:
+          path: /dev/shm
+          type: Directory

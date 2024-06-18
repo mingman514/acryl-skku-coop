@@ -50,7 +50,6 @@ sudo systemctl restart kubelet
 msg "Init kubernetes cluster"
 sleep 2
 sudo kubeadm init \
-	--kubernetes-version 1.27.10 \
 	--cri-socket unix://var/run/containerd/containerd.sock
 	#--pod-network-cidr=20.0.1.0/24 \
 
@@ -80,19 +79,6 @@ sleep 2
 # Nvidia Network Operator (including rdmaSharedDevicePlugin, multus, etc.)
 msg "Create nvidia network operator"
 ./scripts/install-nvidia-network-operator.sh
-
-## macvlan
-#msg "Setting macvlan network"
-#sudo apt install -y jq ipcalc
-#cp templates/macvlan_network_template.yaml macvlan_network.yaml
-#RDMA_IFACE=$RNIC_INTERFACE
-#RDMA_SUBNET_CIDR=$(ipcalc -b ${TARGET_IP%:*} | grep Network | awk '{print $2}')
-#RDMA_SUBNET_NETMASK=$(ipcalc -b ${TARGET_IP%:*} | grep Netmask | awk '{print $4}')
-#RDMA_EXCLUDES=${RDMA_SUBNET_CIDR/%$RDMA_SUBNET_NETMASK/25}
-#sed -i -e "s|RDMA_INTERFACE|$RDMA_IFACE|" -e "s|RDMA_SUBNET_CIDR|$RDMA_SUBNET_CIDR|" -e "s|RDMA_SUBNET_EXCLUDES|$RDMA_EXCLUDES|" macvlan_network.yaml
-#jq ".master = $RNIC_INTERFACE" macvlan.conf > tmp_macvlan.conf
-#mv tmp_macvlan.conf macvlan.conf
-#kubectl apply -f macvlan_network.yaml
 
 msg "Init K8S Cluster Done"
 

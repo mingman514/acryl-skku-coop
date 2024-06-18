@@ -22,4 +22,4 @@ sudo sed -i 's@BinaryName = ""@BinaryName = "/usr/bin/nvidia-container-runtime"@
 
 sudo systemctl restart containerd
 
-kubectl create -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.14.3/nvidia-device-plugin.yml
+#kubectl create -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.14.3/nvidia-device-plugin.yml

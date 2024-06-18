@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-101
+  annotations:
+    k8s.v1.cni.cncf.io/networks: nad-101
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: acridc-101
+  containers:
+  - image: 192.168.0.36:5000/mp-ds-default:0.1.0
+    imagePullPolicy: Always
+    #- image: ubuntu:20.04 
+    name: rdma-test-ctr
+    securityContext:
+      capabilities:
+        add: [ "IPC_LOCK" ]
+    resources:
+      limits:
+        rdma/jf_roce: 1
+        nvidia.com/gpu: 1
+      requests:
+        rdma/jf_roce: 1
+        nvidia.com/gpu: 1
+    securityContext:                                                                                   
+      privileged: true
+    command: ["/bin/sh", "-c"]
+    args: ["ip route add 10.0.0.0/16 via 10.0.101.1; cp -r /jf-llm/* /root/; sleep infinity"]
+    #args: ["apt update && apt install -y python3 sudo vim openssh-client net-tools iputils-ping iproute2 traceroute; ip route add 10.0.0.0/16 via 10.0.101.1; cp -r /jf-llm/* /root/; sleep infinity"]
+    #args: ["apt update && apt install -y python3 vim wget openssh-server openssh-client net-tools iputils-ping pciutils iproute2 perftest ibverbs-utils infiniband-diags traceroute; ip route add 10.0.0.0/16 via 10.0.101.1; sleep infinity"]
+    env:
+    - name: JFB_MP_SEED_NUM
+      valueFrom:
+        configMapKeyRef:
+          name: jf-mp-config
+          key: jfb_mp_seed_num
+    - name: JFB_MP_SEED_LIST
+      valueFrom:
+        configMapKeyRef:
+          name: jf-mp-config
+          key: seed_acridc-101
+    - name: NCCL_IB_QPS_PER_CONNECTION
+      valueFrom:
+        configMapKeyRef:
+          name: jf-mp-config
+          key: nccl_ib_qps_per_connection
+    - name: NCCL_IB_SPLIT_DATA_ON_QPS
+      valueFrom:
+        configMapKeyRef:
+          name: jf-mp-config
+          key: nccl_ib_split_data_on_qps
+    volumeMounts:
+    - mountPath: /jf-llm
+      name: jf-llm-src
+    - mountPath: /dev/shm
+      name: shm
+  volumes:
+  - name: jf-llm-src
+    persistentVolumeClaim:
+      claimName: jf-llm-src-pvc
+  - name: shm
+    hostPath:
+      path: /dev/shm
+      type: Directory
