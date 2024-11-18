@@ -1,10 +1,3 @@
-TARGET_DIR=~
-TARGET_IP=192.168.1.1   # RNIC IP
-
-RNIC_INTERFACE=$(ip -o addr show | awk "/inet $TARGET_IP/" | awk '{print $2}')
-echo "RNIC interface is [$RNIC_INTERFACE]"
-sleep 3
-
 msg() {
     message="$1"
     border="========================================"
@@ -67,6 +60,8 @@ kubectl taint nodes $(hostname) node-role.kubernetes.io/control-plane-
 msg "Create CNI"
 sleep 2
 kubectl apply -f https://docs.projectcalico.org/v3.23/manifests/calico.yaml
+# There are chances that calico autodetects a wrong interface, so use the first internal ip for each kubernetes node.
+kubectl set env daemonset/calico-node -n kube-system IP_AUTODETECTION_METHOD=kubernetes-internal-ip
 
 echo "** Wait until CNI Pod Running"
 wait_until_pod_running_by_label "k8s-app=calico-kube-controllers"
@@ -74,14 +69,14 @@ wait_until_pod_running_by_label "k8s-app=calico-kube-controllers"
 # Nvidia device plugin
 msg "Create nvidia device plugin"
 sleep 2
-./scripts/install-nvidia-device-plugin.sh
+./scripts/install-nvidia-gpu-operator.sh
 
 # Nvidia Network Operator (including rdmaSharedDevicePlugin, multus, etc.)
 msg "Create nvidia network operator"
+sleep 2
 ./scripts/install-nvidia-network-operator.sh
 
 msg "Init K8S Cluster Done"
-
 echo "Now let Worker nodes join this cluster with following command:"
 echo ""
-sudo kubeadm token create --print-join-command
+kubeadm token create --print-join-command

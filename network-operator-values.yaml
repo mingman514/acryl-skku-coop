@@ -18,7 +18,7 @@ ofedDriver:
 rdmaSharedDevicePlugin:
   deploy: true
   resources:
-    - name: jf.rdma/roce
+    - name: jf_roce
       drivers: ["mlx5_core"]
       #ifNames: ["ens11f0", "ens11f1"]
 
