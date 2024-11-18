@@ -6,13 +6,16 @@ sudo apt-get update
 sudo apt-get install -y apt-transport-https ca-certificates curl gpg
 
 # k8s 공식 repo 추가
-sudo mkdir -m 755 /etc/apt/keyrings
+sudo mkdir -p -m 755 /etc/apt/keyrings
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v${K8S_VERSION}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
 echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v${K8S_VERSION}/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list
 
 # k8s 관련 패키지 설치 (설치 가능한 패키지 확인: apt-cache madison [package name])
 sudo apt-get update
-sudo apt-get install -y kubelet=${K8S_VERSION}.10-1.1 kubeadm=${K8S_VERSION}.10-1.1 kubectl=${K8S_VERSION}.10-1.1
+sudo apt-get install -y kubelet kubeadm kubectl
 
 # 버전 고정
 sudo apt-mark hold kubelet kubeadm kubectl
